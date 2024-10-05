@@ -1,0 +1,68 @@
+services:
+  # database
+  db:
+    image: "mariadb:10"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "database"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - "releaser-mariadb:/var/lib/mysql"
+    networks:
+      - releaser
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - "-p password"
+      retries: 3
+      timeout: 5s
+
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: "db"
+      PMA_USER: "root"
+      PMA_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+    networks:
+      - releaser
+    depends_on:
+      - db
+
+  # redis
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "releaser-redis:/data"
+    networks:
+      - releaser
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
+
+volumes:
+  releaser-mariadb:
+    driver: local
+  releaser-redis:
+    driver: local
+
+networks:
+  releaser:
+    driver: bridge

@@ -1,0 +1,22 @@
+{
+  "name": "@twirelab/releaser",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "turbo dev"
+  },
+  "keywords": [],
+  "author": "Łukasz Lupa",
+  "license": "MIT",
+  "devDependencies": {
+    "turbo": "^2.1.3"
+  },
+  "resolutions": {
+    "strtok3": "8.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "strtok3": "8.0.1"
+    }
+  },
+  "packageManager": "pnpm@9.4.0"
+}
